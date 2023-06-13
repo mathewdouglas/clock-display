@@ -24,7 +24,9 @@
     let cols = 15;
     var arraym = [];
     var arrayh = [];
-    var mode = 0;
+    var configm = [];
+    var configh = [];
+    var mode = 1;
 
     function setup() {
         createCanvas(screenwidth, screenheight);
@@ -40,25 +42,37 @@
         cx = radius;
         cy = radius;
 
+        var defaultValue = 225;
+
         for (let row = 0; row < rows; row++) {
             var arrayrows = [];
+            var configrows = [];
             for (let col = 0; col < cols; col++) {
-                arrayrows.push(col*10);   
+                arrayrows.push(col*10);
+                configrows.push(defaultValue); 
             }
-            arraym.push(arrayrows);   
+            arraym.push(arrayrows);
+            configm.push(configrows);
         }
 
         for (let row = 0; row < rows; row++) {
             var arrayrows = [];
+            var configrows = [];
             for (let col = 0; col < cols; col++) {
-                arrayrows.push(col*10+180);   
+                arrayrows.push(col*10+180); 
+                configrows.push(defaultValue);   
             }
-            arrayh.push(arrayrows);   
+            arrayh.push(arrayrows);
+            configh.push(configrows);
+        }
+
+        window.onclick = function() {
+            mode = Math.abs(mode - 1);
         }
     }
 
     function draw() {
-        background(230);
+        background(255);
 
 
         intervalx = cx * 2;
@@ -71,21 +85,26 @@
                 cx = intervalx * (j + 1) - (intervalx/2);
 
                 // Draw the clock background
-                noStroke();
-                fill(255, 255, 255);
+                stroke(230);
+                strokeWeight(1);
+                fill(248);
                 // drawingContext.save();
                 ellipse(cx, cy, clockDiameter, clockDiameter);
 
-                dx = mouseX - cx;
-                dy = mouseY - cy;
-                mouseAngle = (Math.atan2(dy, dx) * 180 / PI) + 90;
-                // console.log(mouseAngle);
+                if (mode == 0) {
+                    dx = mouseX - cx;
+                    dy = mouseY - cy;
+                    mouseAngle = Math.round((Math.atan2(dy, dx) * 180 / PI) + 90);
+                    // console.log(mouseAngle);
+                    arraym[i][j] = mouseAngle;
+                    arrayh[i][j] = mouseAngle + 180;
+                }
 
                 // Angles for sin() and cos() start at 3 o'clock;
                 // subtract HALF_PI to make them start at the top
                 // let s = map(second(), 0, 60, 0, TWO_PI) - HALF_PI;
-                let m = map((arraym[i][j] * mode) + (mouseAngle * Math.abs(mode - 1)), 0, 360, 0, TWO_PI) - HALF_PI;
-                let h = map((arraym[i][j] * mode) + (mouseAngle * Math.abs(mode - 1)) - 180, 0, 360, 0, TWO_PI) - HALF_PI;
+                let m = map(arraym[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
+                let h = map(arrayh[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
 
                 // drawingContext.clip();
 
@@ -102,6 +121,8 @@
         cx = intervalx / 2;
         cy = intervaly / 2;
 
+        updateDisplay();
+
         // drawingContext.restore(); // Remove the clippping mask and go back to normal.
 
         // Draw the minute ticks
@@ -116,18 +137,27 @@
         // endShape();
     }
 
-    setTimeout(updateDisplay(), 5000);
-
     function updateDisplay() {
         var interval = 1;
-        while (interval++ < 10) {
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                if (arraym[row][col] >= 360) {
+                    arraym[row][col] -= 360;
+                }
+                if (arrayh[row][col] >= 360) {
+                    arrayh[row][col] -= 360;
+                }
+                
+                if (arraym[row][col] != configm[row][col]) {
                     arraym[row][col] += interval;
+                }
+                if (arrayh[row][col] != configh[row][col]) {
                     arrayh[row][col] += interval;
                 }
             }
         }
+        console.log(configh[1][1]);
+        console.log(arrayh[1][1]);
     }
 
 </script>
