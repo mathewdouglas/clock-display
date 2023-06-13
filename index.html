@@ -28,7 +28,7 @@
     var arrayh = [];
     var configm = [];
     var configh = [];
-    var mode = 1;
+    var mode = 0;
 
     function setup() {
         createCanvas(screenwidth, screenheight);
@@ -95,7 +95,7 @@
                 // drawingContext.save();
                 ellipse(cx, cy, clockDiameter, clockDiameter);
 
-                if (mode == 0) {
+                if (mode == 1) {
                     dx = mouseX - cx;
                     dy = mouseY - cy;
                     mouseAngle = Math.round((Math.atan2(dy, dx) * 180 / PI) + 90);
