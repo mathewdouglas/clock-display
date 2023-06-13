@@ -34,6 +34,8 @@
         createCanvas(screenwidth, screenheight);
         stroke(255);
 
+        configTime();
+
         let radius = min(screenwidth, screenheight) / rows / 2;
 
         secondsRadius = radius;
@@ -158,12 +160,17 @@
                 }
             }
         }
-        console.log(configh[1][1]);
-        console.log(arrayh[1][1]);
     }
 
     function configTime() {
-        
+        if (minute() != currentMinute) {
+            currentMinute = minute();
+        }
+        if (hour() != currentHour) {
+            currentHour = hour();
+        }
+        console.log(currentMinute);
+        console.log(currentHour);
     }
 
 </script>
