@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
+</head>
+<body>
+    
+</body>
+<script>
+    var cx, cy;
+    var dx, dy;
+    var mouseAngle;
+    let secondsRadius;
+    let minutesRadius;
+    let hoursRadius;
+    let clockDiameter;
+    let screenwidth = window.innerWidth;
+    let screenheight = window.innerHeight;
+    let rows = 8;
+    let cols = 15;
+    var arraym = [];
+    var arrayh = [];
+    var configm = [];
+    var configh = [];
+    var mode = 1;
+
+    function setup() {
+        createCanvas(screenwidth, screenheight);
+        stroke(255);
+
+        let radius = min(screenwidth, screenheight) / rows / 2;
+
+        secondsRadius = radius;
+        minutesRadius = radius * 0.7;
+        hoursRadius = radius * 0.55;
+        clockDiameter = radius * 1.8;
+
+        cx = radius;
+        cy = radius;
+
+        var defaultValue = 225;
+
+        for (let row = 0; row < rows; row++) {
+            var arrayrows = [];
+            var configrows = [];
+            for (let col = 0; col < cols; col++) {
+                arrayrows.push(col*10);
+                configrows.push(defaultValue); 
+            }
+            arraym.push(arrayrows);
+            configm.push(configrows);
+        }
+
+        for (let row = 0; row < rows; row++) {
+            var arrayrows = [];
+            var configrows = [];
+            for (let col = 0; col < cols; col++) {
+                arrayrows.push(col*10+180); 
+                configrows.push(defaultValue);   
+            }
+            arrayh.push(arrayrows);
+            configh.push(configrows);
+        }
+
+        window.onclick = function() {
+            mode = Math.abs(mode - 1);
+        }
+    }
+
+    function draw() {
+        background(255);
+
+
+        intervalx = cx * 2;
+        intervaly = cy * 2;
+
+        for (let i = 0; i < rows; i++) {
+            cy = intervaly * (i + 1) - (intervaly/2)
+            for (let j = 0; j < cols; j++) {
+                
+                cx = intervalx * (j + 1) - (intervalx/2);
+
+                // Draw the clock background
+                stroke(230);
+                strokeWeight(1);
+                fill(248);
+                // drawingContext.save();
+                ellipse(cx, cy, clockDiameter, clockDiameter);
+
+                if (mode == 0) {
+                    dx = mouseX - cx;
+                    dy = mouseY - cy;
+                    mouseAngle = Math.round((Math.atan2(dy, dx) * 180 / PI) + 90);
+                    // console.log(mouseAngle);
+                    arraym[i][j] = mouseAngle;
+                    arrayh[i][j] = mouseAngle + 180;
+                }
+
+                // Angles for sin() and cos() start at 3 o'clock;
+                // subtract HALF_PI to make them start at the top
+                // let s = map(second(), 0, 60, 0, TWO_PI) - HALF_PI;
+                let m = map(arraym[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
+                let h = map(arrayh[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
+
+                // drawingContext.clip();
+
+                // Draw the hands of the clock
+                stroke(0, 0, 0);
+                strokeWeight(10);
+                line(cx, cy, cx + cos(m) * minutesRadius, cy + sin(m) * minutesRadius);
+                strokeWeight(10);
+                line(cx, cy, cx + cos(h) * hoursRadius, cy + sin(h) * hoursRadius);
+                
+            }
+        }
+
+        cx = intervalx / 2;
+        cy = intervaly / 2;
+
+        updateDisplay();
+
+        // drawingContext.restore(); // Remove the clippping mask and go back to normal.
+
+        // Draw the minute ticks
+        // strokeWeight(4);
+        // beginShape(POINTS);
+        // for (let a = 0; a < 360; a += 6) {
+        //     let angle = radians(a);
+        //     let x = cx + cos(angle) * secondsRadius;
+        //     let y = cy + sin(angle) * secondsRadius;
+        //     vertex(x, y);
+        // }
+        // endShape();
+    }
+
+    function updateDisplay() {
+        var interval = 1;
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                if (arraym[row][col] >= 360) {
+                    arraym[row][col] -= 360;
+                }
+                if (arrayh[row][col] >= 360) {
+                    arrayh[row][col] -= 360;
+                }
+                
+                if (arraym[row][col] != configm[row][col]) {
+                    arraym[row][col] += interval;
+                }
+                if (arrayh[row][col] != configh[row][col]) {
+                    arrayh[row][col] += interval;
+                }
+            }
+        }
+        console.log(configh[1][1]);
+        console.log(arrayh[1][1]);
+    }
+
+</script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+</html>
