@@ -35,8 +35,6 @@
         createCanvas(screenwidth, screenheight);
         stroke(255);
 
-        configTime();
-
         let radius = min(screenwidth, screenheight) / rows / 2;
 
         secondsRadius = radius;
@@ -70,6 +68,8 @@
             arrayh.push(arrayrows);
             configh.push(configrows);
         }
+
+        configTime();
 
         window.onclick = function() {
             mode = Math.abs(mode - 1);
