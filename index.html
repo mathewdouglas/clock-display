@@ -243,9 +243,9 @@
 
         setInterval(configTime, 1000)
 
-        window.onclick = function() {
-            mode = Math.abs(mode - 1);
-        }
+        //window.onclick = function() {
+            //mode = Math.abs(mode - 1);
+        //}
 
         //window.onkeypress = function() {
            // updateBool = !updateBool;
@@ -257,6 +257,14 @@
 
             if (key == " ") {
                 updateBool = !updateBool;
+            }
+
+            if (key == "0") {
+                mode = 0;
+            }
+
+            if (key == "1") {
+                mode = 1;
             }
         });
     }
