@@ -363,6 +363,7 @@
 
         if (currentMinute < 10) {
             currentTimeArrayM.push(ZEROM);
+            currentTimeArrayH.push(ZEROH);
             updateCurrentTimeArray(currentMinute);
         } else {
             updateCurrentTimeArray(Math.floor(currentMinute / 10));
