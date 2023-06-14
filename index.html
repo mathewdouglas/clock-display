@@ -214,13 +214,30 @@
             [ 90, 90,270]
         ];
 
+        let ONEM = [
+            [180, 90,180],
+            [  0,180,  0],
+            [225,  0,  0],
+            [225,  0,  0],
+            [225,  0,  0],
+            [225, 90,270]
+        ];
+        let ONEH = [
+            [ 90,270,270],
+            [  0,270,180],
+            [225,180,180],
+            [225,180,180],
+            [225,180,180],
+            [225,  0,  0]
+        ];
+
         var pointer = [1,1];
 
         for (let index = 0; index < 4; index++) {
-            for (let i = 0; i < ZEROM.length; i++) {
-                for (let j = 0; j < ZEROM[i].length; j++) {
-                    configm[pointer[0] + i][pointer[1] + j] = ZEROM[i][j];
-                    configh[pointer[0] + i][pointer[1] + j] = ZEROH[i][j];
+            for (let i = 0; i < ONEM.length; i++) {
+                for (let j = 0; j < ONEM[i].length; j++) {
+                    configm[pointer[0] + i][pointer[1] + j] = ONEM[i][j];
+                    configh[pointer[0] + i][pointer[1] + j] = ONEH[i][j];
                 }
             }
             if (pointer[1] != 4) {
