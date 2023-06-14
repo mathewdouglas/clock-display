@@ -29,6 +29,7 @@
     var configm = [];
     var configh = [];
     var mode = 0;
+    var updateBool = true;
 
     function setup() {
         createCanvas(screenwidth, screenheight);
@@ -72,6 +73,11 @@
 
         window.onclick = function() {
             mode = Math.abs(mode - 1);
+        }
+
+        window.onkeypress = function() {
+            updateBool = !updateBool;
+            console.log(updateBool);
         }
     }
 
@@ -152,10 +158,10 @@
                     arrayh[row][col] -= 360;
                 }
                 
-                if (arraym[row][col] != configm[row][col]) {
+                if (updateBool || arraym[row][col] != configm[row][col]) {
                     arraym[row][col] += interval;
                 }
-                if (arrayh[row][col] != configh[row][col]) {
+                if (updateBool || arrayh[row][col] != configh[row][col]) {
                     arrayh[row][col] += interval;
                 }
             }
