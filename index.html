@@ -197,10 +197,14 @@
                     arrayh[row][col] -= 360;
                 }
                 
-                if (updateBool || arraym[row][col] != configm[row][col]) {
+                if (updateBool) {
+                    arraym[row][col] -= 360;
+                }
+
+                if (arraym[row][col] != configm[row][col]) {
                     arraym[row][col] += interval;
                 }
-                if (updateBool || arrayh[row][col] != configh[row][col]) {
+                if (arrayh[row][col] != configh[row][col]) {
                       arrayh[row][col] += interval;
                 }
             }
