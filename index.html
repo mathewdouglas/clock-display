@@ -11,8 +11,6 @@
     
 </body>
 <script>
-    import time
-    
     var cx, cy;
     var dx, dy;
     var mouseAngle;
@@ -352,8 +350,9 @@
                     arraym[row][col] += interval;
                 }
                 if (updateBool || arrayh[row][col] != configh[row][col]) {
-                    time.sleep(1);
-                    arrayh[row][col] += interval;
+                    setTimeout(function() {
+                      arrayh[row][col] += interval;
+                    }, 1000); // Delay of 1000 milliseconds (1 second)
                 }
             }
         }
