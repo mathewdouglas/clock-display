@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Clock Display</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
 </head>
 <body>
@@ -17,6 +17,10 @@
     let secondsRadius;
     let minutesRadius;
     let hoursRadius;
+    var currentMinute;
+    var currentHour;
+    var currentTimeArrayM = [];
+    var currentTimeArrayH = [];
     let clockDiameter;
     let screenwidth = window.innerWidth;
     let screenheight = window.innerHeight;
@@ -26,7 +30,29 @@
     var arrayh = [];
     var configm = [];
     var configh = [];
-    var mode = 1;
+    var mode = 0;
+    var updateBool = false;
+
+    let ZEROM = [[180,270,180],[180,180,180],[180,180,180],[180,0,180],[180,0,180],[0,270,0]];
+    let ZEROH = [[90,90,270],[0,180,0],[0,0,0],[0,180,0],[0,0,0],[90,90,270]];
+    let ONEM = [[180,90,180],[0,180,0],[225,0,0],[225,0,0],[225,0,0],[225, 90,270]];
+    let ONEH = [[90,270,270],[90,270,180],[225,180,180],[225,180,180],[225,180,180],[225,0,0]];
+    let TWOM = [[180,90,180],[0,270,0],[180,0,0],[0,180,0],[0,0,180],[0,90,270]];
+    let TWOH = [[90,270,270],[90,180,180],[90,270,180],[180,90,270],[180,90,270],[90,270,0]];
+    let THREEM = [[90,270,270],[0,270,0],[90,0,0],[0,270,0],[90,0,0],[0,90,0]];
+    let THREEH = [[180,90,180],[90,180,180],[180,270,180],[90,180,180],[180,270,180],[90,270,270]];
+    let FOURM = [[90,180,180],[0,0,0],[0,0,0],[0,270,0],[225,0,0],[225,90,0]];
+    let FOURH = [[180,270,270],[180,180,180],[180,90,180],[90,180,180],[225,180,180],[225,0,270]];
+    let FIVEM = [[180,270,270],[180,90,0],[180,0,270],[90,180,0],[180,270,0],[90,90,0]];
+    let FIVEH = [[90,90,180],[0,180,270],[0,90,180],[0,270,180],[90,0,180],[0,270,270]];
+    let SIXM = [[180,270,270],[180,90,0],[180,0,270],[180,180,0],[180,0,0],[90,90,0]];
+    let SIXH = [[90,90,180],[0,180,270],[0,90,180],[0,180,180],[0,0,180],[0,270,270]];
+    let SEVENM = [[180,90,180],[0,180,0],[90,0,0],[225,0,0],[225,0,0],[225,90,270]];
+    let SEVENH = [[90,270,270],[180,270,180],[0,180,180],[225,180,180],[225,180,180],[225,0,0]];
+    let EIGHTM = [[180,270,180],[180,180,180],[0,0,0],[180,180,180],[180,0,180],[0,270,0]];
+    let EIGHTH = [[90,90,270],[0,180,0],[180,0,180],[0,180,0],[0,0,0],[90,90,270]];
+    let NINEM = [[180,90,180],[180,180,180],[180,0,180],[90,180,180],[90,0,180],[90,90,270]];
+    let NINEH = [[90,270,270],[0,180,0],[0,0,0],[0,270,0],[180,270,0],[0,270,0]];
 
     function setup() {
         createCanvas(screenwidth, screenheight);
@@ -66,9 +92,32 @@
             configh.push(configrows);
         }
 
-        window.onclick = function() {
-            mode = Math.abs(mode - 1);
-        }
+        setInterval(configTime, 1000)
+
+        //window.onclick = function() {
+            //mode = Math.abs(mode - 1);
+        //}
+
+        //window.onkeypress = function() {
+           // updateBool = !updateBool;
+            //console.log(updateBool);
+       // }
+
+        window.addEventListener('keydown', function(event) {
+            let key = event.key; // "a", "1", "Shift", etc.
+
+            if (key == " ") {
+                updateBool = !updateBool;
+            }
+
+            if (key == "0") {
+                mode = 0;
+            }
+
+            if (key == "1") {
+                mode = 1;
+            }
+        });
     }
 
     function draw() {
@@ -91,7 +140,7 @@
                 // drawingContext.save();
                 ellipse(cx, cy, clockDiameter, clockDiameter);
 
-                if (mode == 0) {
+                if (mode == 1) {
                     dx = mouseX - cx;
                     dy = mouseY - cy;
                     mouseAngle = Math.round((Math.atan2(dy, dx) * 180 / PI) + 90);
@@ -109,7 +158,7 @@
                 // drawingContext.clip();
 
                 // Draw the hands of the clock
-                stroke(0, 0, 0);
+                stroke(0);
                 strokeWeight(10);
                 line(cx, cy, cx + cos(m) * minutesRadius, cy + sin(m) * minutesRadius);
                 strokeWeight(10);
@@ -148,16 +197,121 @@
                     arrayh[row][col] -= 360;
                 }
                 
+                if (updateBool) {
+                    arraym[row][col] -= 360;
+                }
+
                 if (arraym[row][col] != configm[row][col]) {
                     arraym[row][col] += interval;
                 }
                 if (arrayh[row][col] != configh[row][col]) {
-                    arrayh[row][col] += interval;
+                      arrayh[row][col] += interval;
                 }
             }
         }
-        console.log(configh[1][1]);
-        console.log(arrayh[1][1]);
+        if (updateBool) {
+            updateBool = !updateBool;
+        }
+    }
+
+    function configTime() {
+        if (currentHour != hour()) {
+            updateBool = !updateBool;
+            currentHour = hour();
+        }
+        if (currentMinute != minute()) {
+            updateBool = !updateBool;
+            currentMinute = minute();
+        }
+
+        if (currentHour < 10) {
+            currentTimeArrayM.push(ZEROM);
+            currentTimeArrayH.push(ZEROH);
+            updateCurrentTimeArray(currentHour);
+        } else {
+            updateCurrentTimeArray(Math.floor(currentHour / 10));
+            updateCurrentTimeArray(currentHour % 10);
+        }
+
+        if (currentMinute < 10) {
+            currentTimeArrayM.push(ZEROM);
+            currentTimeArrayH.push(ZEROH);
+            updateCurrentTimeArray(currentMinute);
+        } else {
+            updateCurrentTimeArray(Math.floor(currentMinute / 10));
+            updateCurrentTimeArray(currentMinute % 10);
+        }
+
+        var pointer = [1,1];
+        var count = 0;
+
+        for (let index = 0; index < 4; index++) {
+            for (let i = 0; i < TWOM.length; i++) {
+                for (let j = 0; j < TWOM[i].length; j++) {
+                    configm[pointer[0] + i][pointer[1] + j] = currentTimeArrayM[count][i][j];
+                    configh[pointer[0] + i][pointer[1] + j] = currentTimeArrayH[count][i][j];
+                }
+            }
+            if (pointer[1] != 4) {
+                pointer[1] += 3;
+            } else {
+                pointer[1] += 4;
+            }
+            count++;
+        }
+
+        console.log(currentTimeArrayH);
+        currentTimeArrayM = [];
+        currentTimeArrayH = [];
+    }
+
+    function updateCurrentTimeArray(currentDigit) {
+        switch (currentDigit) {
+            case 0:
+            currentTimeArrayM.push(ZEROM);
+            currentTimeArrayH.push(ZEROH);
+                break;
+            case 1:
+            currentTimeArrayM.push(ONEM);
+            currentTimeArrayH.push(ONEH);
+                break;
+            case 2:
+            currentTimeArrayM.push(TWOM);
+            currentTimeArrayH.push(TWOH);
+                break;
+            case 3:
+            currentTimeArrayM.push(THREEM);
+            currentTimeArrayH.push(THREEH);
+                break;
+            case 4:
+            currentTimeArrayM.push(FOURM);
+            currentTimeArrayH.push(FOURH);
+                break;
+            case 5:
+            currentTimeArrayM.push(FIVEM);
+            currentTimeArrayH.push(FIVEH);
+                break;
+            case 6:
+            currentTimeArrayM.push(SIXM);
+            currentTimeArrayH.push(SIXH);
+                break;
+            case 7:
+            currentTimeArrayM.push(SEVENM);
+            currentTimeArrayH.push(SEVENH);
+                break;
+            case 8:
+            currentTimeArrayM.push(EIGHTM);
+            currentTimeArrayH.push(EIGHTH);
+                break;
+            case 9:
+            currentTimeArrayM.push(NINEM);
+            currentTimeArrayH.push(NINEH);
+                break;
+            default:
+            currentTimeArrayM.push(ZEROM);
+            currentTimeArrayH.push(ZEROH);
+                break;
+        }
     }
 
 </script>
