@@ -152,17 +152,33 @@
                 // Angles for sin() and cos() start at 3 o'clock;
                 // subtract HALF_PI to make them start at the top
                 // let s = map(second(), 0, 60, 0, TWO_PI) - HALF_PI;
-                let m = map(arraym[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
-                let h = map(arrayh[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
+                let previousM = map(arraym[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
+                let previousH = map(arrayh[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
+                
+                let targetM = map(configm[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
+                let targetH = map(configh[i][j], 0, 360, 0, TWO_PI) - HALF_PI;
+
+                let animatedM = lerp(previousM, targetM, 0.1); // Adjust the animation speed by changing the interpolation value
+                let animatedH = lerp(previousH, targetH, 0.1);
 
                 // drawingContext.clip();
 
                 // Draw the hands of the clock
                 stroke(0);
                 strokeWeight(10);
-                line(cx, cy, cx + cos(m) * minutesRadius, cy + sin(m) * minutesRadius);
+                line(
+                    cx,
+                    cy,
+                    cx + cos(animatedM) * minutesRadius,
+                    cy + sin(animatedM) * minutesRadius
+                );
                 strokeWeight(10);
-                line(cx, cy, cx + cos(h) * hoursRadius, cy + sin(h) * hoursRadius);
+                line(
+                    cx,
+                    cy,
+                    cx + cos(animatedH) * hoursRadius,
+                    cy + sin(animatedH) * hoursRadius
+                );
                 
             }
         }
@@ -170,7 +186,7 @@
         cx = intervalx / 2;
         cy = intervaly / 2;
 
-        updateDisplay();
+        // updateDisplay();
 
         // drawingContext.restore(); // Remove the clippping mask and go back to normal.
 
